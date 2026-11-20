@@ -72,6 +72,9 @@ object Updates {
    * Network and format failures throw.
    */
   suspend fun check(context: Context): Release? = withContext(Dispatchers.IO) {
+    if (context.packageName != RELEASE_PACKAGE && context.packageName != "$RELEASE_PACKAGE.debug") {
+      return@withContext null
+    }
     val conn = open("https://api.github.com/repos/$REPO/releases/latest")
     conn.setRequestProperty("Accept", "application/vnd.github+json")
     try {
